@@ -13,3 +13,14 @@ class ToySerializer(serializers.ModelSerializer):
                   owner=validated_data['owner'])
         toy.save()
         return toy
+
+
+class FormDataCreateToy(serializers.Serializer):
+    user_name = serializers.CharField(max_length=255)
+    contact = serializers.CharField(max_length=14)
+    toy_name = serializers.CharField(max_length=255)
+    toy_to_change = serializers.CharField(max_length=255)
+    pictures = serializers.FileField()
+
+    def create(self, validated_data):
+        print(validated_data)
