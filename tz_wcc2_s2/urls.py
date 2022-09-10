@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from api_andao_atakalo.models import Toy, Owner
 
+admin.site.register(Owner)
+admin.site.register(Toy)
 
 
 urlpatterns = [
