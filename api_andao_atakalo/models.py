@@ -2,6 +2,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 import random
 import string
+import uuid
 
 
 def generate_token():
@@ -9,6 +10,7 @@ def generate_token():
 
 
 class Owner(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True, null=False, blank=False)
     contact = PhoneNumberField(unique=True, null=False, blank=False)
 
@@ -17,6 +19,7 @@ class Owner(models.Model):
 
 
 class Toy(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     toy_to_change = models.CharField(max_length=255)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
@@ -27,5 +30,6 @@ class Toy(models.Model):
 
 
 class Picture(models.Model):
+    id = models.AutoField(primary_key=True)
     path = models.CharField(max_length=255)
     toy = models.ForeignKey(Toy, on_delete=models.CASCADE)
