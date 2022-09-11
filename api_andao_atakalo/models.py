@@ -22,7 +22,7 @@ class Toy(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     toy_to_change = models.CharField(max_length=255)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner, related_name="toys",on_delete=models.CASCADE)
     token = models.CharField(max_length=255, default=generate_token, unique=True)
 
     def __str__(self):
@@ -31,5 +31,5 @@ class Toy(models.Model):
 
 class Picture(models.Model):
     id = models.AutoField(primary_key=True)
-    path = models.CharField(max_length=255)
-    toy = models.ForeignKey(Toy, on_delete=models.CASCADE)
+    image_url = models.ImageField(upload_to='uploads')
+    toy = models.ForeignKey(Toy, related_name="pictures",on_delete=models.CASCADE)
