@@ -21,6 +21,7 @@ class Owner(models.Model):
 class Exchange(models.Model):
     id = models.AutoField(primary_key=True)
     toy_to_change = models.CharField(max_length=255)
+    desired_toy = models.CharField(max_length=255)
     owner = models.ForeignKey(Owner, related_name="toys",on_delete=models.CASCADE)
     token = models.CharField(max_length=255, default=generate_token, unique=True)
     active = models.BooleanField(default=True)

@@ -13,7 +13,7 @@ class ToySerializer(serializers.ModelSerializer):
     pictures = PictureSerializer(many=True, read_only=True,required=False)
 
     class Meta:
-        model = Toy
+        model = Exchange
         fields = ('__all__')
 
     """def create(self, validated_data):
