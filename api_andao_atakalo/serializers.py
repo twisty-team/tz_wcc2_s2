@@ -8,34 +8,27 @@ class PictureSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class ToySerializer(serializers.ModelSerializer):
-    pictures = PictureSerializer(many=True, read_only=True,required=False)
+    pictures = PictureSerializer(many=True, read_only=True, required=False)
 
     class Meta:
         model = Exchange
-        fields = ('__all__')
+        exclude = ['token']
 
-    """def create(self, validated_data):
-        toy = Toy(name=validated_data['name'],
-                  toy_to_change=validated_data['toy_to_change'],
-                  owner=validated_data['owner'])
-        toy.save()
-        return toy
-"""
 
 class OwnerSerializer(serializers.ModelSerializer):
     toys = ToySerializer(many=True, required=False, read_only=True)
+
     class Meta:
         model = Owner
         fields = '__all__'
-
 
     def partial_update(self, instance):
         exchange = instance
         instance.active = False
         instance.save()
         return instance
+
 
 class FileSerializer(serializers.Serializer):
     image = serializers.ListField(
