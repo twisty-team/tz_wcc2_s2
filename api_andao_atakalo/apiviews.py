@@ -1,11 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
 from .models import Exchange, Owner, Picture
 from .serializers import ExchangeSerializer, FormDataCreateExchange
-from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
 
 
 class ExchangeDeactivation(APIView):

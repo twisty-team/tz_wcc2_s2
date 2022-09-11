@@ -27,7 +27,7 @@ class Exchange(models.Model):
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.owner.name} wants to change {self.toy_to_change} for {self.desired_toy}."
 
 
 class Picture(models.Model):
