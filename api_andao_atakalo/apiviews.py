@@ -36,7 +36,4 @@ class ToyCreate(APIView):
             for files in request.FILES.getlist('pictures'):
                 picture = Picture(toy=toy, image_url=files)
                 picture.save()
-        toy_serializer = ToySerializer(data=toy, many=False)
-        toy_serializer.is_valid()
-        print(toy_serializer.initial_data)
-        return Response(toy_serializer.data)
+        return Response({'token': toy.token})
