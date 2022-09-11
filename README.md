@@ -47,6 +47,15 @@ Errors are returned as JSON objects in the following base format :
 ## Endpoints
 * `POST /api/exchanges`
     * Create a new exchange using the `user_name`, `contact`, `desired_toy`, `toy_to_change` and `pictures` of the toy to change from a formdata. `user_name` and `contact` must be unique. It it's the first time a user post an exchange, a `token` is returned. This token will be used to deactivate an exchange.
+
+| Name | Type | Description |
+| --- | --- | --- |
+| user_name | string | The name of the user |
+| contact | string | The contact of the user |
+| desired_toy | string | The desired toy |
+| toy_to_change | string | The toy to change |
+| pictures | file | The pictures of the toy to change |
+
     * Example request :
 
 ```curl
