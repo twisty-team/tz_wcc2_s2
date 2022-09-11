@@ -133,6 +133,6 @@ class ExchangeView(PageNumberPagination, APIView):
                 picture = Picture(exchange=exchange, image_url=files)
                 picture.save()
 
-        data["message"] = "Exchange created successfuly"
+        data["success"] = True
 
-        return Response(data)
+        return Response(data, status=status.HTTP_201_CREATED)
