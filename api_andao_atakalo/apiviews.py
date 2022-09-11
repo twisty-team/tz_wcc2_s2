@@ -21,7 +21,7 @@ class ExchangeDeactivation(APIView):
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
-        token = authorization[8:]
+        token = authorization[7:]
         if len(token) == 0:
             return Response(
                 {
@@ -116,8 +116,7 @@ class ExchangeView(PageNumberPagination, APIView):
                 )
 
             data["token"] = owner.token
-            data["message"] = "Store this token somewhere secure as you will need to provide it in an\
-                 Authorization header in order to deactivate an exchange."
+            data["message"] = "Store this token somewhere secure as you will need to provide it in an Authorization header in order to deactivate an exchange."
         else:
             owner = owner_query_set[0]
 
