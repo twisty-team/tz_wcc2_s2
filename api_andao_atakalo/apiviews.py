@@ -1,5 +1,8 @@
+from rest_framework import generics, mixins
 from rest_framework.views import APIView
-from .models import Toy, Owner, Picture
+from rest_framework.response import Response
+
+from .models import Exchange
 from .serializers import ToySerializer, FormDataCreateToy
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
@@ -7,6 +10,7 @@ from rest_framework.pagination import LimitOffsetPagination
 
 class ToyList(APIView, LimitOffsetPagination):
     serializer_class = ToySerializer
+    pagination_class = CustomPagination
 
     def get(self, request, format=None):
         toys = Toy.objects.all()
