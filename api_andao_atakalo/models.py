@@ -18,12 +18,12 @@ class Owner(models.Model):
         return self.name
 
 
-class Toy(models.Model):
+class Exchange(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
     toy_to_change = models.CharField(max_length=255)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     token = models.CharField(max_length=255, default=generate_token, unique=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -32,4 +32,4 @@ class Toy(models.Model):
 class Picture(models.Model):
     id = models.AutoField(primary_key=True)
     path = models.CharField(max_length=255)
-    toy = models.ForeignKey(Toy, on_delete=models.CASCADE)
+    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)

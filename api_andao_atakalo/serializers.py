@@ -1,19 +1,25 @@
 from rest_framework import serializers
-from .models import Toy, Picture
+from .models import Exchange, Picture
 
 
 class ToySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Toy
-        fields = ('id', 'name', 'toy_to_change', 'owner', 'token')
+        model = Exchange
+        fields = ('id', 'toy_to_change', 'owner')
 
     def create(self, validated_data):
-        toy = Toy(name=validated_data['name'],
-                  toy_to_change=validated_data['toy_to_change'],
-                  owner=validated_data['owner'])
+        toy = Exchange(
+            toy_to_change=validated_data['toy_to_change'],
+            owner=validated_data['owner']
+        )
         toy.save()
         return toy
 
+    def partial_update(self, instance):
+        exchange = instance
+        instance.active = False
+        instance.save()
+        return instance
 
 class FileSerializer(serializers.Serializer):
     image = serializers.ListField(
@@ -23,10 +29,11 @@ class FileSerializer(serializers.Serializer):
     )
 
     def create(self, validated_data):
-        toy = Toy.objects.latest('created_at')
+        toy = Exchange.objects.latest('created_at')
         image = validated_data.pop('image')
         for img in image:
-            photo = Picture.objects.create(image=img, blogs=blogs, **validated_data)
+            photo = Picture.objects.create(
+                image=img, blogs=blogs, **validated_data)
         return photo
 
 
@@ -39,6 +46,3 @@ class FormDataCreateToy(serializers.Serializer):
 
     def create(self, validated_data):
         print(validated_data)
-
-
-
