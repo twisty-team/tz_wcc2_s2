@@ -21,7 +21,7 @@ class Owner(models.Model):
 class Exchange(models.Model):
     id = models.AutoField(primary_key=True)
     toy_to_change = models.CharField(max_length=255)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Owner, related_name="toys",on_delete=models.CASCADE)
     token = models.CharField(max_length=255, default=generate_token, unique=True)
     active = models.BooleanField(default=True)
 
@@ -31,5 +31,5 @@ class Exchange(models.Model):
 
 class Picture(models.Model):
     id = models.AutoField(primary_key=True)
-    path = models.CharField(max_length=255)
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE)
+    image_url = models.ImageField(upload_to='uploads')
+    exchange = models.ForeignKey(Exchange, related_name="pictures",on_delete=models.CASCADE)

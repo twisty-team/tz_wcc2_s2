@@ -4,36 +4,43 @@ from rest_framework.response import Response
 
 from .models import Exchange
 from .serializers import ToySerializer, FormDataCreateToy
-from .pagination import CustomPagination
+from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 
 
-class ToyList(generics.ListAPIView):
-    queryset = Exchange.objects.all()
+class ToyList(APIView, LimitOffsetPagination):
     serializer_class = ToySerializer
     pagination_class = CustomPagination
 
+    def get(self, request, format=None):
+        toys = Toy.objects.all()
+        result_page = self.paginate_queryset(toys, request, view=self)
+        toy_serializer = ToySerializer(data=result_page, many=True)
+        toy_serializer.is_valid()
+        return self.get_paginated_response(toy_serializer.data)
 
-class ToyCreate(generics.CreateAPIView):
+
+class ToyCreate(APIView):
     serializer_class = FormDataCreateToy
 
-
-class ExchangeView(APIView):
-    pagination_class = CustomPagination
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return FormDataCreateToy
-        return ToySerializer
-
-    def get(self, request):
-        exchanges = Exchange.objects.filter(active=True).all()
-        exchange_data = []
-        for exchange in exchanges:
-            exchange_data.append(exchange)
-        return Response(exchange_data)
-
     def post(self, request):
-        pass
-
-    def patch(self, request, pk):
-        return self.partial_update(request, )
+        user_name = request.data['user_name']
+        contact = request.data['contact']
+        owner_query_set = Owner.objects.filter(name=user_name, contact=contact)
+        if len(owner_query_set) == 0:
+            owner = Owner(name=user_name, contact=contact)
+            owner.save()
+        else:
+            owner = owner_query_set[0]
+        toy_name = request.data['toy_name']
+        toy_to_change = request.data['toy_to_change']
+        toy = Toy(name=toy_name, toy_to_change=toy_to_change, owner=owner)
+        toy.save()
+        if request.FILES.getlist('pictures'):
+            for files in request.FILES.getlist('pictures'):
+                picture = Picture(toy=toy, image_url=files)
+                picture.save()
+        toy_serializer = ToySerializer(data=toy, many=False)
+        toy_serializer.is_valid()
+        print(toy_serializer.initial_data)
+        return Response(toy_serializer.data)
