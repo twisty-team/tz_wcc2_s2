@@ -5,29 +5,22 @@ from .models import Exchange, Picture, Owner
 class PictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Picture
-        fields = '__all__'
-
-
-class ToySerializer(serializers.ModelSerializer):
-    pictures = PictureSerializer(many=True, read_only=True, required=False)
-
-    class Meta:
-        model = Exchange
-        exclude = ['token']
+        exclude = ('exchange', 'id')
 
 
 class OwnerSerializer(serializers.ModelSerializer):
-    toys = ToySerializer(many=True, required=False, read_only=True)
-
     class Meta:
         model = Owner
-        fields = '__all__'
+        exclude = ('token', 'id')
 
-    def partial_update(self, instance):
-        exchange = instance
-        instance.active = False
-        instance.save()
-        return instance
+
+class ExchangeSerializer(serializers.ModelSerializer):
+    pictures = PictureSerializer(many=True, read_only=True, required=False)
+    owner = OwnerSerializer()
+
+    class Meta:
+        model = Exchange
+        fields = '__all__'
 
 
 class FileSerializer(serializers.Serializer):
@@ -46,12 +39,11 @@ class FileSerializer(serializers.Serializer):
         return photo
 
 
-class FormDataCreateToy(serializers.Serializer):
+class FormDataCreateExchange(serializers.Serializer):
     user_name = serializers.CharField(max_length=255)
     contact = serializers.CharField(max_length=14)
     toy_name = serializers.CharField(max_length=255)
     toy_to_change = serializers.CharField(max_length=255)
-    #pictures = FileSerializer(many=True)
     pictures = serializers.ImageField(max_length=100000)
 
     def create(self, validated_data):
