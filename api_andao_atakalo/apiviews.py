@@ -75,6 +75,14 @@ class ExchangeView(PageNumberPagination, APIView):
         return self.get_paginated_response(exchange_serializer.data)
 
     def post(self, request):
+        def check_phone_number_format(phone_number):
+            if len(phone_number) != 10:
+                return False
+            for i in phone_number:
+                if i not in "0123456789":
+                    return False
+            return True
+            
         data = {}
 
         try:
@@ -100,6 +108,15 @@ class ExchangeView(PageNumberPagination, APIView):
                     },
                     status=status.HTTP_400_BAD_REQUEST
                 )
+
+        if not check_phone_number_format(contact):
+            return Response(
+                {
+                    "error": "400 Bad Request",
+                    "message": "Invalid phone number format"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         owner_query_set = Owner.objects.filter(name=user_name, contact=contact)
         if len(owner_query_set) == 0:
