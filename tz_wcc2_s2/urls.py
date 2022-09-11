@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
-
+from django.conf.urls.static import static
+from django.conf import settings  
 
 #admin.site.register(Toy)
 #admin.site.register(Owner)
@@ -24,4 +25,4 @@ from django.urls import path, re_path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('api/', include('api_andao_atakalo.urls'))
-]
+] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 
