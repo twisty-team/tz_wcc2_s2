@@ -81,14 +81,26 @@ class ExchangeView(PageNumberPagination, APIView):
         try:
             user_name = request.data['user_name']
             contact = request.data['contact']
+            desired_toy = request.data['desired_toy']
+            toy_to_change = request.data['toy_to_change']
         except:
             return Response(
                 {
                     "error": "400 Bad Request",
-                    "message": "One or more of the following field is missing : (user_name, contact)."
+                    "message": "One or more of the following field is missing : (user_name, contact, desired_toy, toy_to_change)."
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+        for i in [user_name, contact, desired_toy, toy_to_change]:
+            if len(i) == 0:
+                return Response(
+                    {
+                        "error": "400 Bad Request",
+                        "message": "None of the field can be empty"
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
         owner_query_set = Owner.objects.filter(name=user_name, contact=contact)
         if len(owner_query_set) == 0:
@@ -110,18 +122,6 @@ class ExchangeView(PageNumberPagination, APIView):
         else:
             owner = owner_query_set[0]
 
-        try:
-            desired_toy = request.data['desired_toy']
-            toy_to_change = request.data['toy_to_change']
-        except:
-            return Response(
-                {
-                    "error": "400 Bad Request",
-                    "message": "One or more of the following fields is missing : (desired_toy, toy_to_change)",
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
         exchange = Exchange(toy_to_change=toy_to_change,
                             desired_toy=desired_toy, owner=owner)
 
@@ -133,5 +133,7 @@ class ExchangeView(PageNumberPagination, APIView):
             for files in request.FILES.getlist('pictures'):
                 picture = Picture(exchange=exchange, image_url=files)
                 picture.save()
+
+        data["message"] = "Exchange created successfuly"
 
         return Response(data)
